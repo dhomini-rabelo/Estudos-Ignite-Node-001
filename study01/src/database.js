@@ -49,6 +49,17 @@ export class Database {
 
     }
 
+    update(tableName, id, data) {
+        const table = this.select(tableName)
+        const rowIndex = table.findIndex(item => item.id === id)
+        if (rowIndex !== -1) {
+            this.#database[tableName][rowIndex] = {...data, id}
+            this.#persist()
+        } else {
+            throw new Error('Item not found')
+        }
+    }
+
     delete(tableName, id) {
         const table = this.select(tableName)
         const rowIndex = table.findIndex(item => item.id === id)
