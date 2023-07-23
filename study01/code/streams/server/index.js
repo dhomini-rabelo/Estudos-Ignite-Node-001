@@ -21,7 +21,7 @@ const server = http.createServer(async (req, res) => {
         for await (const chunk of req) {
             buffers.push(chunk)
         }
-        return res.end(buffers.join('-'))
+        return res.end(Buffer.concat(buffers).toString())
     }
     return req.pipe(new InvertNumberStream()).pipe(res)
 })
