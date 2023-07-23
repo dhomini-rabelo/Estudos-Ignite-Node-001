@@ -7,8 +7,7 @@ export class Router {
         })
     }
 
-    getHandler(path, method) {
-        const route = this.#routes.find(route => route.path === path && route.method === method)
-        return route ? route.handler : null
+    getRoute(path, method) {
+        return this.#routes.find(route => route.path === path && route.method === method) || null
     }
 }
