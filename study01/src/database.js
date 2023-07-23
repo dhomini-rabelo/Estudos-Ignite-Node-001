@@ -14,9 +14,7 @@ export class Database {
 
     async #loadData() {
         return await fs.readFile(this.#path, 'utf8').then((data) => {
-            console.log(data)
             this.#database = JSON.parse(data)
-            console.log(this.#database)
         }).catch(() => {
             this.#persist()
         })
