@@ -47,6 +47,21 @@ export class Database {
             throw new Error('Invalid table structure')
         }
     }
+
+    delete(tableName, id) {
+        const table = this.select(tableName)
+        if(Array.isArray(table)) {
+            const rowIndex = table.findIndex(item => item.id === id)
+            if (rowIndex !== -1) {
+                this.#database[tableName] = table.splice(rowIndex, 1)
+                this.#persist()
+            } else {
+                throw new Error('Item not found')
+            }
+        } else {
+            throw new Error('Invalid table structure')
+        }
+    }
     
     async migrate(migrationType, migrationArgs={}) {
         await this.#loadData()
