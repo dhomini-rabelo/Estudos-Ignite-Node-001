@@ -28,7 +28,12 @@ export class Database {
         const table = this.#database[tableName]
         if (table) {
             if (Array.isArray(table)) {
-                return table
+                return table.filter(item => {
+                    const filterDataEntries = Object.entries(filters)
+                    return filterDataEntries.length === 0 || filterDataEntries.some(([fieldName, fieldValue]) => {
+                        return item[fieldName].includes(fieldValue)
+                    })
+                })
             } else {
                 throw new Error('Invalid table structure')
             }

@@ -8,7 +8,8 @@ await database.migrate('createTable', {name: 'users'})
 export const router = new Router()
 
 router.add('/users', 'GET', (req, res) => {
-    return res.end(JSON.stringify(database.select('users')))
+    const filters = req.query.username ? {username: req.query.username} : {}
+    return res.end(JSON.stringify(database.select('users', filters)))
 })
 
 router.add('/users', 'POST', (req, res) => {
