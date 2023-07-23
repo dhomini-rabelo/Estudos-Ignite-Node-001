@@ -5,7 +5,7 @@ import {useJSONMiddleware} from './middlewares/json.js'
 
 const database = new Database()
 
-database.migrate('createTable', {name: 'users'})
+await database.migrate('createTable', {name: 'users'})
 
 
 const server = http.createServer(async (req, res) => {

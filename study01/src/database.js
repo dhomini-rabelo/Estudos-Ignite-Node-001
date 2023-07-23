@@ -1,15 +1,28 @@
 import fs from 'node:fs/promises'
 
 
+
+
 export class Database {
+    #path = new URL('../database.json', import.meta.url)
     #database = {}
 
     constructor() {
-        fs.readFile('database.json', 'utf-8').then((data) => JSON.parse(data)).catch(() => this.#persist())
+        this.#loadData()
+    }
+
+    async #loadData() {
+        return await fs.readFile(this.#path, 'utf8').then((data) => {
+            console.log(data)
+            this.#database = JSON.parse(data)
+            console.log(this.#database)
+        }).catch(() => {
+            this.#persist()
+        })
     }
 
     #persist() {
-        fs.writeFile('database.json', JSON.stringify(this.#database))
+        fs.writeFile(this.#path, JSON.stringify(this.#database))
     }
 
     select(tableName) {
@@ -36,13 +49,14 @@ export class Database {
         }
     }
     
-    migrate(migrationType, migrationArgs={}) {
+    async migrate(migrationType, migrationArgs={}) {
+        await this.#loadData()
         switch (migrationType) {
             case 'createTable': {
                 const tableName = migrationArgs.name
-                if (tableName) {
+                if (tableName && (this.#database[tableName] === undefined)) {
                     this.#database[tableName] = []
-                } else {
+                } else if(!tableName) {
                     throw new Error('Invalid table name')
                 }
                 break
