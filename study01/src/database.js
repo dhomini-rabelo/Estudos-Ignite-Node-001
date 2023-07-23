@@ -53,8 +53,10 @@ export class Database {
         const table = this.select(tableName)
         const rowIndex = table.findIndex(item => item.id === id)
         if (rowIndex !== -1) {
-            this.#database[tableName][rowIndex] = {...data, id}
+            const newData = {...data, id}
+            this.#database[tableName][rowIndex] = newData
             this.#persist()
+            return newData
         } else {
             throw new Error('Item not found')
         }
@@ -64,7 +66,7 @@ export class Database {
         const table = this.select(tableName)
         const rowIndex = table.findIndex(item => item.id === id)
         if (rowIndex !== -1) {
-            this.#database[tableName] = table.splice(rowIndex, 1)
+            table.splice(rowIndex, 1)
             this.#persist()
         } else {
             throw new Error('Item not found')
