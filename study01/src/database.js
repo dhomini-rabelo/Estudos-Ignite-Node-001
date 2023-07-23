@@ -1,5 +1,16 @@
+import fs from 'node:fs/promises'
+
+
 export class Database {
     #database = {}
+
+    constructor() {
+        fs.readFile('database.json', 'utf-8').then((data) => JSON.parse(data)).catch(() => this.#persist())
+    }
+
+    #persist() {
+        fs.writeFile('database.json', JSON.stringify(this.#database))
+    }
 
     select(tableName) {
         const table = this.#database[tableName]
@@ -18,6 +29,7 @@ export class Database {
                 id: table.length + 1,
             }
             table.push(databaseData)
+            this.#persist()
             return databaseData
         } else {
             throw new Error('Invalid table structure')
@@ -39,6 +51,7 @@ export class Database {
                 throw new Error('Invalid migrationType')
             }
         }
+        this.#persist()
     }
 }
 
