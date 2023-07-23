@@ -15,6 +15,10 @@ router.add('/users', 'POST', (req, res) => {
     return res.writeHead(201).end(JSON.stringify(database.insert('users', req.body)))
 })
 
+router.add('/users/:id', 'PUT', (req, res) => {
+    return res.writeHead(200).end(JSON.stringify((database.update('users', req.params.id, req.body))))
+})
+
 router.add('/users/:id', 'DELETE', (req, res) => {
     database.delete('users', req.params.id)
     return res.writeHead(204).end()
