@@ -4,11 +4,25 @@ export class Router {
     #buildPath(path) {
         const routerParamsRegex = /:([a-zA-Z]+)/g
         const pathWithParams = path.replaceAll(routerParamsRegex, '(?<$1>[a-z0-9\-_]+)')
-        return new RegExp(`^${pathWithParams}`)
+        return new RegExp(`^${pathWithParams}(?<query>\\?(.*))?$`)
     }
 
     middleware(req, res, route) {
-        req.params = { ...req.url.match(route.path).groups }
+
+        function getQueryParams(query) {
+            if (!query) {
+                return {}
+            }
+            return query.slice(1).split('&').reduce((queryParams, query) => {
+                const [paramName, paramValue] = query.split('=')
+                queryParams[paramName] = paramValue
+                return queryParams
+            }, {})
+        }
+
+        const routeParams = req.url.match(route.path)
+        req.params = { ...routeParams.groups }
+        req.query = { ...getQueryParams(routeParams.groups.query) }
     }
 
     add(path, method, handler) {
