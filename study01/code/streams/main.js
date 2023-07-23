@@ -22,6 +22,7 @@ class OneToTenStream extends Readable {
 class InvertNumberStream extends Transform {
     _transform(chunk, encoding, callback) {
         const invertedNumber = parseInt(chunk.toString()) * -1
+        console.log({invertedNumber})
         callback(null, Buffer.from(String(invertedNumber)))
     }
 
@@ -35,4 +36,5 @@ class MultiplyByTenStream extends Writable {
 }
 
 
-new OneToTenStream().pipe(new InvertNumberStream()).pipe(new MultiplyByTenStream())
+
+// new OneToTenStream().pipe(new InvertNumberStream()).pipe(new MultiplyByTenStream())
