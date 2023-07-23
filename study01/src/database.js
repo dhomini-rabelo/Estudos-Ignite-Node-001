@@ -27,7 +27,11 @@ export class Database {
     select(tableName) {
         const table = this.#database[tableName]
         if (table) {
-            return table
+            if (Array.isArray(table)) {
+                return table
+            } else {
+                throw new Error('Invalid table structure')
+            }
         } else {
             throw new Error('Table not found')
         }  
@@ -35,31 +39,24 @@ export class Database {
     
     insert(tableName, data) {
         const table = this.select(tableName)
-        if(Array.isArray(table)) {
-            const databaseData = {
-                ...data,
-                id: randomUUID(),
-            }
-            table.push(databaseData)
-            this.#persist()
-            return databaseData
-        } else {
-            throw new Error('Invalid table structure')
+        const databaseData = {
+            ...data,
+            id: randomUUID(),
         }
+        table.push(databaseData)
+        this.#persist()
+        return databaseData
+
     }
 
     delete(tableName, id) {
         const table = this.select(tableName)
-        if(Array.isArray(table)) {
-            const rowIndex = table.findIndex(item => item.id === id)
-            if (rowIndex !== -1) {
-                this.#database[tableName] = table.splice(rowIndex, 1)
-                this.#persist()
-            } else {
-                throw new Error('Item not found')
-            }
+        const rowIndex = table.findIndex(item => item.id === id)
+        if (rowIndex !== -1) {
+            this.#database[tableName] = table.splice(rowIndex, 1)
+            this.#persist()
         } else {
-            throw new Error('Invalid table structure')
+            throw new Error('Item not found')
         }
     }
     
