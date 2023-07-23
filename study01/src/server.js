@@ -8,7 +8,11 @@ const server = http.createServer(async (req, res) => {
     if (route) {
         await useJSONMiddleware(req, res, route)
         await router.middleware(req, res, route)
-        return route.handler(req, res)
+        try {
+            return route.handler(req, res)
+        } catch(e) {
+            return res.writeHead(500).end()
+        }
     } else {
         return res.writeHead(404).end()
     }
