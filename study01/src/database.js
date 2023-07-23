@@ -24,7 +24,7 @@ export class Database {
         fs.writeFile(this.#path, JSON.stringify(this.#database))
     }
 
-    select(tableName) {
+    select(tableName, filters={}) {
         const table = this.#database[tableName]
         if (table) {
             if (Array.isArray(table)) {
@@ -39,11 +39,11 @@ export class Database {
     
     insert(tableName, data) {
         const table = this.select(tableName)
-        const databaseData = {
+        const newData = {
             ...data,
             id: randomUUID(),
         }
-        table.push(databaseData)
+        this.#database[tableName] = [...table, newData]
         this.#persist()
         return databaseData
 
