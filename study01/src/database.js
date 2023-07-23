@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import fs from 'node:fs/promises'
 
 
@@ -39,7 +40,7 @@ export class Database {
         if(Array.isArray(table)) {
             const databaseData = {
                 ...data,
-                id: table.length + 1,
+                id: randomUUID(),
             }
             table.push(databaseData)
             this.#persist()
