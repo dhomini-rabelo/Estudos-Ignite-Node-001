@@ -13,8 +13,9 @@ router.add('/tasks', 'GET', (req, res) => {
 })
 
 router.add('/tasks', 'POST', (req, res) => {
+    const validBody = {title: req.body.title || '', description: req.body.description || ''}
     return res.writeHead(201).end(JSON.stringify(database.insert('tasks', {
-        ...req.body, completed_at: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString()
+        ...validBody, completed_at: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString()
     })))
 })
 
