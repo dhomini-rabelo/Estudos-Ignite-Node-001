@@ -50,7 +50,7 @@ export class Database {
         }
         this.#database[tableName] = [...table, newData]
         this.#persist()
-        return databaseData
+        return newData
 
     }
 
@@ -58,7 +58,7 @@ export class Database {
         const table = this.select(tableName)
         const rowIndex = table.findIndex(item => item.id === id)
         if (rowIndex !== -1) {
-            const newData = {...data, id}
+            const newData = {...this.#database[tableName][rowIndex], ...data, id}
             this.#database[tableName][rowIndex] = newData
             this.#persist()
             return newData

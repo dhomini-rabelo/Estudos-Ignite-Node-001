@@ -50,7 +50,7 @@ export class Database {
         }
         this.#database[tableName] = [...table, newData]
         this.#persist()
-        return databaseData
+        return newData
 
     }
 
