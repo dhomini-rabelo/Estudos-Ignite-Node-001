@@ -20,7 +20,7 @@ router.add('/tasks', 'POST', (req, res) => {
 
 router.add('/tasks/:id', 'PUT', (req, res) => {
     return res.writeHead(200).end(JSON.stringify((database.update('tasks', req.params.id, {
-        ...req.body, updated_at: new Date().toISOString()
+        ...req.body, completed_at: null, updated_at: new Date().toISOString()
     }))))
 })
 
@@ -31,6 +31,6 @@ router.add('/tasks/:id/complete', 'PATCH', (req, res) => {
 })
 
 router.add('/tasks/:id', 'DELETE', (req, res) => {
-    database.delete('users', req.params.id)
+    database.delete('tasks', req.params.id)
     return res.writeHead(204).end()
 })
